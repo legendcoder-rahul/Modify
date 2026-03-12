@@ -1,0 +1,84 @@
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #121212; /* Even darker background */
+  font-family: Arial, sans-serif;
+
+  .register-form {
+    background-color: #222222; /* Slightly lighter dark background for form */
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); /* Darker shadow */
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+
+    h2 {
+      margin-bottom: 30px;
+      color: #ffffff; /* White text for headings */
+      font-size: 28px;
+    }
+
+    .register-form-group {
+      margin-bottom: 20px;
+      text-align: left;
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        color: #e0e0e0; /* Light grey text for labels */
+        font-weight: bold;
+      }
+
+      .register-form-input {
+        width: calc(100% - 20px);
+        padding: 12px 10px;
+        border: 1px solid #444; /* Lighter border for contrast */
+        border-radius: 4px;
+        font-size: 16px;
+        box-sizing: border-box;
+        background-color: #333333; /* Dark background for input fields */
+        color: #ffffff; /* White text for input */
+
+        &:focus {
+          border-color: #5cb85c; /* Lighter green focus */
+          outline: none;
+          box-shadow: 0 0 0 0.2rem rgba(92, 184, 92, 0.4);
+        }
+      }
+    }
+
+    .register-form-button {
+      width: 100%;
+      padding: 12px;
+      background-color: #28a745; /* Primary green, can remain */
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #218838; /* Darker green on hover */
+      }
+    }
+
+    .register-auth-link {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #c0c0c0; /* Light grey for general link text */
+
+      a {
+        color: #5cb85c; /* Lighter green for link */
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
