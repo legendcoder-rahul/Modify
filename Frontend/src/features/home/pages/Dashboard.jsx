@@ -1,12 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router';
 import Sidebar from '../../shared/components/Sidebar';
 import '../styles/dashboard.scss';
 import { init, detect } from '../../Expression/utils/utlis';
 import { useSong } from '../hooks/useSong';
+import { useAuth } from '../../auth/hooks/useAuth';
 import Player from '../components/Player';
 
 const Dashboard = () => {
     const { handleGetSong, loading } = useSong();
+    const { user, handleLogout } = useAuth();
+    const navigate = useNavigate();
 
     const [selectedMood, setSelectedMood] = useState('Detecting...');
     const [moodProfile, setMoodProfile] = useState({
@@ -15,6 +19,7 @@ const Dashboard = () => {
     });
     const [confidence, setConfidence] = useState(0);
     const [isDetecting, setIsDetecting] = useState(false);
+    const [showDropdown, setShowDropdown] = useState(false);
 
     // Refs for webcam & face landmarker
     const videoRef = useRef(null);
@@ -60,6 +65,11 @@ const Dashboard = () => {
         setIsDetecting(false);
     }
 
+    async function onLogout() {
+        await handleLogout();
+        navigate('/login');
+    }
+
     const vibePicks = [
         {
             id: 1,
@@ -94,18 +104,19 @@ const Dashboard = () => {
             <main className="dashboard-main">
                 {/* Top Header */}
                 <div className="dashboard-header">
-                    <div className="search-bar">
-                        <span className="search-icon">🔍</span>
-                        <input 
-                            type="text" 
-                            placeholder="Search artists, tracks, or moods..." 
-                        />
-                    </div>
+                    <h2 className="header-title">🎵 Modily Dashboard</h2>
                     <div className="header-actions">
                         <button className="notification-btn">🔔</button>
-                        <div className="user-profile">
-                            <span>Alex Rivera</span>
+                        <div className="user-profile" onClick={() => setShowDropdown(!showDropdown)}>
+                            <span>{user?.username || 'User'}</span>
                             <div className="avatar">👤</div>
+                            {showDropdown && (
+                                <div className="profile-dropdown">
+                                    <button className="logout-btn" onClick={onLogout}>
+                                        🚪 Logout
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -208,8 +219,8 @@ const Dashboard = () => {
                 </section>
 
                 {/* Real Functional Player */}
-                <Player />
             </main>
+                <Player />
         </div>
     );
 };
