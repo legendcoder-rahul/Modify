@@ -11,6 +11,7 @@ app.use(cors({
     origin: "http://localhost:5173",
     credentials: true
 }))
+app.use(express.static("./public/dist"))
 
 const authRoutes = require('./routes/auth.routes')
 const songRoutes = require('./routes/song.routes')
