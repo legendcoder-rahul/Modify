@@ -2,8 +2,10 @@ import Navbar from '../../shared/components/Navbar';
 import Footer from '../../shared/components/Footer';
 import music from '../../../assets/music.png'
 import '../styles/landing.scss';
+import { useNavigate } from 'react-router';
 
 const Landing = () => {
+    const navigate = useNavigate();
     return (
         <div className="landing">
             <Navbar showNavLinks={true} />
@@ -26,7 +28,7 @@ const Landing = () => {
                         </p>
                         
                         <div className="hero-buttons">
-                            <button className="btn btn-primary">Start Listening</button>
+                            <button onClick={() => navigate('/login')} className="btn btn-primary">Start Listening</button>
                             <button className="btn btn-secondary">Explore Plans</button>
                         </div>
                     </div>
