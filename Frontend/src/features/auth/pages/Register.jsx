@@ -1,75 +1,171 @@
-import React,{useState} from 'react'
-import { Link ,useNavigate} from 'react-router'; // Assuming you use react-router-dom for navigation
-import '../styles/register.scss'; // Import the SCSS file
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router';
 import { useAuth } from '../hooks/useAuth';
+import Navbar from '../../shared/components/Navbar';
+import Footer from '../../shared/components/Footer';
+import '../styles/auth.scss';
 
 const Register = () => {
-  const [username, setUsername] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const { handleRegister } = useAuth();
 
-  const navigate = useNavigate()
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
 
-  const { loading, handleRegister } = useAuth()
+        if (password !== confirmPassword) {
+            setError('Passwords do not match');
+            return;
+        }
 
-  async function handleSubmit(e) {
-    e.preventDefault()
+        if (password.length < 6) {
+            setError('Password must be at least 6 characters long');
+            return;
+        }
 
-    await handleRegister({ username, password, email })
+        setLoading(true);
 
-    navigate('/')
+        try {
+            await handleRegister({ username, email, password });
+            navigate('/login');
+        } catch (err) {
+            setError(err.response?.data?.message || 'Registration failed. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  }
-  return (
-    <div className="register-container">
-      <form 
-      onSubmit={handleSubmit}
-      className="register-form">
-        <h2>Register</h2>
-        <div className="register-form-group">
-          <label htmlFor="name">Name</label>
-          <input
-            value={username}
-            onInput={(e)=>setUsername(e.target.value)}
-            type="text"
-            id="name"
-            className="register-form-input"
-            placeholder="Enter your name"
-            required
-          />
+    return (
+        <div className="auth-page">
+            <Navbar showNavLinks={false} />
+            
+            <div className="auth-container">
+                <div className="auth-content">
+                    <div className="auth-form-section">
+                        <div className="auth-header">
+                            <h1>Join the Music</h1>
+                            <p>Create your account to start exploring</p>
+                        </div>
+
+                        <form className="auth-form" onSubmit={handleSubmit}>
+                            {error && <div className="error-message">{error}</div>}
+
+                            <div className="form-group">
+                                <label htmlFor="username" className="form-label">Full Name</label>
+                                <input
+                                    id="username"
+                                    type="text"
+                                    className="form-input"
+                                    placeholder="John Doe"
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
+                                    required
+                                    disabled={loading}
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="email" className="form-label">Email Address</label>
+                                <input
+                                    id="email"
+                                    type="email"
+                                    className="form-input"
+                                    placeholder="you@example.com"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                    disabled={loading}
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="password" className="form-label">Password</label>
+                                <input
+                                    id="password"
+                                    type="password"
+                                    className="form-input"
+                                    placeholder="Create a strong password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                    disabled={loading}
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="confirmPassword" className="form-label">Confirm Password</label>
+                                <input
+                                    id="confirmPassword"
+                                    type="password"
+                                    className="form-input"
+                                    placeholder="Confirm your password"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    required
+                                    disabled={loading}
+                                />
+                            </div>
+
+                            <div className="terms-checkbox">
+                                <label>
+                                    <input type="checkbox" required disabled={loading} />
+                                    <span>I agree to the <a href="#">Terms and Conditions</a></span>
+                                </label>
+                            </div>
+
+                            <button 
+                                type="submit" 
+                                className="auth-button"
+                                disabled={loading}
+                            >
+                                {loading ? 'Creating account...' : 'Create Account'}
+                            </button>
+                        </form>
+
+                        <div className="auth-divider">
+                            <span>Or sign up with</span>
+                        </div>
+
+                        <div className="social-login">
+                            <button className="social-button google">
+                                <span>🔍</span> Google
+                            </button>
+                            <button className="social-button github">
+                                <span>🐱</span> GitHub
+                            </button>
+                        </div>
+
+                        <div className="auth-footer-text">
+                            Already have an account? <Link to="/login" className="auth-link">Sign in</Link>
+                        </div>
+                    </div>
+
+                    <div className="auth-illustration">
+                        <div className="illustration-card">
+                            <div className="music-wave">
+                                <div className="wave wave1"></div>
+                                <div className="wave wave2"></div>
+                                <div className="wave wave3"></div>
+                                <div className="wave wave4"></div>
+                                <div className="wave wave5"></div>
+                            </div>
+                            <div className="music-note">🎵</div>
+                            <h3>Your Music Journey Starts Here</h3>
+                            <p>Create your account and discover unlimited music</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <Footer />
         </div>
-        <div className="register-form-group">
-          <label htmlFor="email">Email</label>
-          <input
-            value={email}
-            onInput={(e)=>setEmail(e.target.value)}
-            type="email"
-            id="email"
-            className="register-form-input"
-            placeholder="Enter your email"
-            required
-          />
-        </div>
-        <div className="register-form-group">
-          <label htmlFor="password">Password</label>
-          <input
-            value={password}
-            onInput={(e)=>setPassword(e.target.value)}
-            type="password"
-            id="password"
-            className="register-form-input"
-            placeholder="Enter your password"
-            required
-          />
-        </div>
-  
-        <button type="submit" className="register-form-button">Register</button>
-        <div className="register-auth-link">
-          Already have an account? <Link to="/login">Login</Link>
-        </div>
-      </form>
-    </div>
-  )
-}
+    );
+};
 
-export default Register
+export default Register;
