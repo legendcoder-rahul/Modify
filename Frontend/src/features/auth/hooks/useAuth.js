@@ -1,11 +1,11 @@
-import { login, register, getMe, logout } from '../services/auth.api'
-import { useContext, useEffect } from 'react'
+import { login, register, logout } from '../services/auth.api'
+import { useContext } from 'react'
 import { AuthContext } from '../auth.context'
 
 export const useAuth = () => {
     const context = useContext(AuthContext)
 
-    const { user, setUser, loading, setLoading } = context
+    const { user, setUser, loading, setLoading, handleGetMe } = context
 
     async function handleRegister({ username, email, password }) {
         setLoading(true)
@@ -21,32 +21,12 @@ export const useAuth = () => {
         setLoading(false)
     }
 
-    async function handleGetMe() {
-        try {
-            setLoading(true)
-            const data = await getMe()
-            setUser(data.user)
-            setLoading(false)
-        } catch (error) {
-            if (error.response && error.response.status === 401) {
-                setUser(null)
-                setLoading(false)
-            } else {
-                console.error("Error fetching user data:", error)
-                setLoading(false)
-            }
-        }
-    }
     async function handleLogout() {
         setLoading(true)
         const data = await logout()
         setUser(null)
         setLoading(false)
     }
-
-    useEffect(()=>{
-        handleGetMe()
-    },[])
 
     return ({
         user, loading, handleRegister, handleLogin, handleLogout, handleGetMe
